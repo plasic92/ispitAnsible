@@ -1,0 +1,5 @@
+- name: Configure Apache on CentOS/Red Hat with roles
+  hosts: localhost
+  roles:
+   - /root/mariadb
+
