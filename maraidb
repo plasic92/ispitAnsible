@@ -1,0 +1,57 @@
+ansible-galaxy init role_name
+echo "role_path=neki/put/do/direktorija" >> ansible.cfg
+source ansible.cfg
+
+
+/task/insttallmaraidb
+---
+- name: install
+  package:
+  name: mariadb-server
+  state: present
+
+/task/cpmaraicfg.yml
+---
+- name: cp maria config
+  template:
+    src: my.cnf.j2
+    dest: /etc/mysql/my.cnf
+notify: Restart mariaDb
+
+
+/task/createdatabase.yml
+---
+- name: create wpress database
+  mysql_db:
+    name: wordpress
+    state: present
+
+
+/task/createuserdb.yml
+---
+- name: create user db
+  mysql_user:
+    name: wordpress
+    password: centos
+    priv: 'wordpress. *:ALL'
+    host: localhost
+    state: present
+
+/task/enablemariadb.yml
+---
+- name: enable db service
+  systemd:
+    name: mariadb
+    enabled: yes
+    state: started
+
+
+
+/task/main.yml
+---
+# tasks file for mariadb
+- include: installmariadb.yml
+- include: cpmariadb.yml
+- include: createmariadbase.yml
+- include: createdatabaseuser.yml
+- include: enablemariadb.yml
