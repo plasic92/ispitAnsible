@@ -1,0 +1,21 @@
+---
+- name: files mngmnt
+  hosts: all
+  become: yes
+  tasks:
+   - name: Add a line to a file if the file does not exist, without passing regexp
+     ansible.builtin.lineinfile:
+       path: /tmp/date.txt
+       line: "ovo je test {{ '%d.%m.%Y' | strftime }}"
+       create: yes
+   - name: Change file ownership, group and permissions
+     ansible.builtin.file:
+       path: /tmp/date.txt
+       owner: korisnik
+       group: korisnik
+       mode: '0644'
+   - name: Add a line to a file if the file does not exist, without passing regexp
+     ansible.builtin.lineinfile:
+       path: /tmp/"ispit{{ '%d.%m.%Y' | strftime }}.txt"
+       line: "ispti ispiti"
+       create: yes

@@ -1,0 +1,31 @@
+---
+- hosts: all
+  tasks:
+    - name: "installing packages"
+      dnf:
+       name:
+        - fontconfig
+        - java-17-openjdk
+       state: latest
+    - name: download Jenkins
+      ansible.builtin.yum_repository:
+        name: Jenkins-stable
+        description: Jenkins-stable
+        baseurl: http://pkg.jenkins.io/redhat-stable
+        #gpgcheck: no
+    - name: import gpg keys
+      ansible.builtin.rpm_key:
+        state: present
+        key: https://pkg.jenkins.io/redhat/jenkins.io-2023.key
+    - name: Upgrade all packages
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+    - name: install
+      dnf:
+       name:
+        - jenkins
+    - name: Start service jenkins, if not started
+      ansible.builtin.service:
+        name: jenkins
+        state: started
